@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/BLL/">
+    <Project Path="BLL/BLL/BLL.csproj" />
+  </Folder>
+  <Folder Name="/DAL/">
+    <Project Path="DAL/DAL/DAL.csproj" />
+  </Folder>
+  <Folder Name="/Entidades/">
+    <Project Path="Entidades/Entidades/Entidades.csproj" />
+  </Folder>
+  <Project Path="ClubNaval/ClubNaval.csproj" />
+</Solution>
