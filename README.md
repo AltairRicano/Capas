@@ -439,3 +439,87 @@ métodos:
   * BLLSalida usa VOSalida, VOSalidaExtendida y DALSalida.
   * DALSalida usa VOSalida y VOSalidaExtendida.
   * InicializadorBD usa SqlConnection y SqlCommand.
+
+---
+
+# Diagrama Relacional de la Base de Datos
+
+## 1. Versión Mermaid
+
+```mermaid
+erDiagram
+    Personas ||--o{ Barcos : "Dueño"
+    Barcos ||--o{ Salidas : "Barco"
+    Personas ||--o{ Salidas : "Capitán"
+
+    Personas {
+        INT IdPersona PK
+        VARCHAR Nombre
+        NVARCHAR Telefono
+        VARCHAR Direccion
+        VARCHAR Correo
+        INT Cargo
+        BIT Disponibilidad
+        BIT Activo
+        VARCHAR UrlFoto
+    }
+
+    Barcos {
+        INT IdBarco PK
+        VARCHAR Matricula
+        VARCHAR NoAmarre
+        VARCHAR Nombre
+        DECIMAL Cuota
+        INT IdOwner FK
+        BIT Disponibilidad
+        BIT Activo
+        VARCHAR UrlFoto
+    }
+
+    Salidas {
+        INT IdSalida PK
+        DATETIME FechaHoraSalida
+        VARCHAR Destino
+        VARCHAR Estado
+        INT IdBarco FK
+        INT IdPersona FK
+    }
+```
+
+## 2. Lista con Formato
+
+Personas:
+   IdPersona INT PK
+   Nombre VARCHAR(50)
+   Telefono NVARCHAR(20)
+   Direccion VARCHAR(100)
+   Correo VARCHAR(100)
+   Cargo INT
+   Disponibilidad BIT
+   Activo BIT
+   UrlFoto VARCHAR(MAX)
+
+Barcos:
+   IdBarco INT PK
+   Matricula VARCHAR(10)
+   NoAmarre VARCHAR(5)
+   Nombre VARCHAR(25)
+   Cuota DECIMAL(10,2)
+   IdOwner INT FK
+   Disponibilidad BIT
+   Activo BIT
+   UrlFoto VARCHAR(MAX)
+
+Salidas:
+   IdSalida INT PK
+   FechaHoraSalida DATETIME
+   Destino VARCHAR(MAX)
+   Estado VARCHAR(25)
+   IdBarco INT FK
+   IdPersona INT FK
+
+## 3. Lista de Relaciones
+
+La entidad Barcos se relaciona con Personas en IdOwner de Barcos y IdPersona de Personas.
+La entidad Salidas se relaciona con Barcos en IdBarco de Salidas y IdBarco de Barcos.
+La entidad Salidas se relaciona con Personas en IdPersona de Salidas y IdPersona de Personas.
