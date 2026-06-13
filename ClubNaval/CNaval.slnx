@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="BussinesLogic/BussinesLogic.csproj" Id="f07795f1-179c-47df-b699-1f018cca79d5" />
+  <Project Path="CNaval/CNaval.csproj" Id="55dbcaac-3099-4392-b762-9e07cdb8a824" />
+  <Project Path="DataAccess/DataAccess.csproj" Id="c49f42b6-7de2-4e1b-9ec5-7fc1121438e2" />
+  <Project Path="Entities/Entities.csproj" Id="ddc56071-a301-47d2-8c2a-f5383a0d4ea9" />
+</Solution>

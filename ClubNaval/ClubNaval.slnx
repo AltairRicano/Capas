@@ -1,6 +1,0 @@
-<Solution>
-  <Project Path="../BLL/BLL/BLL.csproj" />
-  <Project Path="../DAL/DAL/DAL.csproj" />
-  <Project Path="../Entidades/Entidades/Entidades.csproj" />
-  <Project Path="ClubNaval.csproj" />
-</Solution>
