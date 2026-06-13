@@ -9,7 +9,7 @@ Una de sus características principales es el control automatizado de disponibil
 
 ## 1. Definición y Análisis de Requerimientos del Sistema
 
-Tras un análisis exhaustivo de la base de código (Interfaces, Lógica de Negocio y Acceso a Datos), no fue necesario el uso de múltiples agentes, ya que se logró mapear el 100% de las funcionalidades implementadas en una sola pasada iterativa. A continuación se detallan los requerimientos:
+A continuación se detallan los requerimientos funcionales y no funcionales identificados a partir del análisis de la base de código (Interfaces, Lógica de Negocio y Acceso a Datos):
 
 ### Requerimientos Funcionales (RF)
 
@@ -51,10 +51,9 @@ Tras un análisis exhaustivo de la base de código (Interfaces, Lógica de Negoc
 * **RNF06 (Asincronismo):** El 100% de las operaciones de lectura/escritura hacia la base de datos deben ser asíncronas (`async/await` y métodos `...Async()`) para asegurar que la interfaz de usuario nunca se congele.
 * **RNF07 (Configuración):** La cadena de conexión a la base de datos (ConnectionString) debe leerse dinámicamente desde un archivo `appsettings.json` ubicado en la raíz del ejecutable.
 
-
 ---
 
-# Diagrama de Clases
+## Diseño del Sistema: Diagrama de Clases
 
 ## 1. Versión Mermaid
 
@@ -442,7 +441,7 @@ métodos:
 
 ---
 
-# Diagrama Relacional de la Base de Datos
+## Diagrama Relacional de la Base de Datos
 
 ## 1. Versión Mermaid
 
@@ -526,9 +525,9 @@ La entidad Salidas se relaciona con Personas en IdPersona de Salidas y IdPersona
 
 ---
 
-# Documentación Técnica de Componentes Clave
+## Documentación Técnica de Componentes Clave
 
-A continuación se detalla la responsabilidad arquitectónica de 4 clases seleccionadas que representan las diferentes capas del sistema.
+A continuación se describen 4 clases representativas, una por capa del sistema: Inicialización de BD, Acceso a Datos (DAL), Lógica de Negocio (BLL) y Presentación (UI).
 
 ---
 
