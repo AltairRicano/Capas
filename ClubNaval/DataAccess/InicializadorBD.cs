@@ -34,7 +34,8 @@ namespace DataAccess
             {
                 cnn.Open();
                 SqlCommand cmd = new SqlCommand(
-                    $"SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{nombre}'", cnn);
+                    "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = @nombre", cnn);
+                cmd.Parameters.AddWithValue("@nombre", nombre);
                 return (int)cmd.ExecuteScalar() > 0;
             }
         }
@@ -45,7 +46,8 @@ namespace DataAccess
             {
                 cnn.Open();
                 SqlCommand cmd = new SqlCommand(
-                    $"SELECT COUNT(*) FROM sys.procedures WHERE name = '{nombre}'", cnn);
+                    "SELECT COUNT(*) FROM sys.procedures WHERE name = @nombre", cnn);
+                cmd.Parameters.AddWithValue("@nombre", nombre);
                 return (int)cmd.ExecuteScalar() > 0;
             }
         }

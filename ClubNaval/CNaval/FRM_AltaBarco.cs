@@ -82,11 +82,18 @@ namespace CNaval
                     return;
                 }
 
+                if (!double.TryParse(txtCuota.Text, out double cuota))
+                {
+                    MessageBox.Show("La cuota debe ser un número válido.",
+                        "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
                 VOBarco barco = new VOBarco(
                     txtMatricula.Text.Trim(),
                     txtNoAmarre.Text.Trim(),
                     txtNombre.Text.Trim(),
-                    double.Parse(txtCuota.Text),
+                    cuota,
                     (int)cmbOwner.SelectedValue,
                     txtUrlFoto.Text.Trim(),
                     true

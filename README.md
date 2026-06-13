@@ -523,3 +523,131 @@ Salidas:
 La entidad Barcos se relaciona con Personas en IdOwner de Barcos y IdPersona de Personas.
 La entidad Salidas se relaciona con Barcos en IdBarco de Salidas y IdBarco de Barcos.
 La entidad Salidas se relaciona con Personas en IdPersona de Salidas y IdPersona de Personas.
+
+---
+
+# Documentación Técnica de Componentes Clave
+
+A continuación se detalla la responsabilidad arquitectónica de 4 clases seleccionadas que representan las diferentes capas del sistema.
+
+---
+
+## 1. Capa de Base de Datos: `InicializadorBD`
+
+**Responsabilidad:**
+Garantiza la idempotencia en la creación del esquema de la base de datos y los Stored Procedures. Utiliza `SqlCommand` con consultas parametrizadas contra el diccionario de datos de SQL Server (`INFORMATION_SCHEMA.TABLES` y `sys.procedures`) para crear objetos condicionalmente y evitar vectores de Inyección SQL.
+
+**Código:**
+```csharp
+    public class InicializadorBD
+    {
+        // ...
+        private bool ExisteTabla(string nombre)
+        {
+            using (SqlConnection cnn = new SqlConnection(cadena))
+            {
+                cnn.Open();
+                SqlCommand cmd = new SqlCommand(
+                    "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = @nombre", cnn);
+                cmd.Parameters.AddWithValue("@nombre", nombre);
+                return (int)cmd.ExecuteScalar() > 0;
+            }
+        }
+        // ...
+    }
+```
+
+---
+
+## 2. Capa de Acceso a Datos (DAL): `DALBarco`
+
+**Responsabilidad:**
+Implementa acceso a datos estructurado utilizando el micro-ORM Dapper. Delega la ejecución a Stored Procedures (`CommandType.StoredProcedure`) y mapea objetos anónimos en C# para parametrizar de forma automatizada y segura las peticiones. Retorna operaciones asíncronas (`Task<T>`) para evitar el bloqueo del hilo de ejecución superior.
+
+**Código:**
+```csharp
+    public class DALBarco
+    {
+        private static string Cadena => new Conexion().CadenaConexion;
+
+        public static async Task<bool> InsertarAsync(VOBarco barco)
+        {
+            using (IDbConnection cnn = new SqlConnection(Cadena))
+            {
+                int rows = await cnn.ExecuteAsync("SP_InsertarBarco",
+                    new
+                    {
+                        barco.Matricula,
+                        barco.NoAmarre,
+                        barco.Nombre,
+                        barco.Cuota,
+                        IdOwner    = barco.IdPersona,
+                        UrlFoto    = barco.UrlFoto ?? ""
+                    },
+                    commandType: CommandType.StoredProcedure);
+                return rows == 1;
+            }
+        }
+    }
+```
+
+---
+
+## 3. Capa Lógica de Negocio (BLL): `BLLBarco`
+
+**Responsabilidad:**
+Actúa como abstracción intermediaria entre la UI y la DAL. Su propósito principal en estas rutinas de persistencia es aislar los errores de infraestructura subyacente (caídas de SQL Server, Timeouts). Al capturar una excepción de persistencia y enmascararla bajo un `InvalidOperationException` genérico, protege las cadenas de conexión y el esquema interno del motor de base de datos impidiendo que la interfaz de usuario los exponga.
+
+**Código:**
+```csharp
+    public class BLLBarco
+    {
+        public static async Task<bool> InsertarAsync(VOBarco barco)
+        {
+            try { return await DALBarco.InsertarAsync(barco); }
+            catch (Exception ex) { throw new InvalidOperationException("Error interno al insertar barco. Verifique la base de datos.", ex); }
+        }
+    }
+```
+
+---
+
+## 4. Capa de Presentación (UI): `FRM_AltaBarco`
+
+**Responsabilidad:**
+Formulario encargado de la recolección de datos y control de flujo visual. Implementa delegados `async void` en sus manejadores de eventos para procesar I/O de red de forma concurrente sin congelar la ventana. Mapea el input del usuario (validado con tipos de conversión seguros como `double.TryParse`) hacia un **DTO (Data Transfer Object)** (`VOBarco`) que se inyecta a la BLL. Previene colisiones de estado alterando las propiedades visuales del control disparador (`btnGuardar.Enabled = false`) durante la mutación de datos.
+
+**Código:**
+```csharp
+    public partial class FRM_AltaBarco : Form
+    {
+        private async void btnGuardar_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!double.TryParse(txtCuota.Text, out double cuota))
+                {
+                    MessageBox.Show("La cuota debe ser un número válido.");
+                    return;
+                }
+
+                VOBarco barco = new VOBarco(
+                    txtMatricula.Text.Trim(), txtNoAmarre.Text.Trim(),
+                    txtNombre.Text.Trim(), cuota,
+                    (int)cmbOwner.SelectedValue, txtUrlFoto.Text.Trim(), true
+                );
+
+                btnGuardar.Enabled = false;
+                await BLLBarco.InsertarAsync(barco);
+
+                MessageBox.Show("Barco guardado correctamente.");
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                btnGuardar.Enabled = true;
+            }
+        }
+    }
+```
