@@ -50,3 +50,4 @@ Tras un análisis exhaustivo de la base de código (Interfaces, Lógica de Negoc
 * **RNF05 (Mapeo O/R):** Se debe utilizar la librería `Dapper` para el mapeo ágil de los registros devueltos por SQL Server a objetos (POCOs) de C#.
 * **RNF06 (Asincronismo):** El 100% de las operaciones de lectura/escritura hacia la base de datos deben ser asíncronas (`async/await` y métodos `...Async()`) para asegurar que la interfaz de usuario nunca se congele.
 * **RNF07 (Configuración):** La cadena de conexión a la base de datos (ConnectionString) debe leerse dinámicamente desde un archivo `appsettings.json` ubicado en la raíz del ejecutable.
+
