@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,6 +16,10 @@ namespace CNaval
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            
+            // Auto-generar BD si no existe
+            new DataAccess.InicializadorBD().InicializarTodo();
+            
             Application.Run(new FrmPrincipal());
         }
     }
