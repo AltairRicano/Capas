@@ -1,5 +1,5 @@
-﻿using System;
-using System.Data;
+using System;
+
 
 namespace Entities
 {
@@ -18,12 +18,6 @@ namespace Entities
             UrlFotoBarco = "";
         }
 
-        public VOSalidaExtendida(DataRow dr) : base(dr)
-        {
-            NombreCapitan = dr["NombreCapitan"].ToString();
-            UrlFotoCapitan = dr["UrlFotoCapitan"].ToString();
-            NombreBarco = dr["NombreBarco"].ToString();
-            UrlFotoBarco = dr["UrlFotoBarco"].ToString();
-        }
+
     }
 }

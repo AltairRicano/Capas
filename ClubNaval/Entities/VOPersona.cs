@@ -1,5 +1,5 @@
-﻿using System;
-using System.Data;
+using System;
+
 
 namespace Entities
 {
@@ -13,6 +13,7 @@ namespace Entities
         public int? Cargo { get; set; }
         public bool? Disponibilidad { get; set; }
         public string UrlFoto { get; set; }
+        public bool? Activo { get; set; }
 
         public VOPersona() { }
 
@@ -41,16 +42,6 @@ namespace Entities
             UrlFoto = urlFoto;
         }
 
-        public VOPersona(DataRow fila)
-        {
-            IdPersona = int.Parse(fila["IdPersona"].ToString());
-            Nombre = fila["Nombre"].ToString();
-            Direccion = fila["Direccion"].ToString();
-            Telefono = fila["Telefono"].ToString();
-            Correo = fila["Correo"].ToString();
-            Cargo = int.Parse(fila["Cargo"].ToString());
-            UrlFoto = fila["UrlFoto"].ToString();
-            Disponibilidad = bool.Parse(fila["Disponibilidad"].ToString());
-        }
+
     }
 }

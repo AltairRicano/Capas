@@ -22,7 +22,7 @@ namespace CNaval
         {
             try
             {
-                var personas = await BLLPersona.ConsultarTodasAsync(true);
+                var personas = await BLLPersona.ConsultarTodasAsync(null);
                 cmbOwner.DataSource = personas;
                 cmbOwner.DisplayMember = "Nombre";
                 cmbOwner.ValueMember = "IdPersona";

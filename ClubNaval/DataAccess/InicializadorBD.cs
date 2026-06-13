@@ -61,6 +61,7 @@ namespace DataAccess
                     Correo        VARCHAR(100) NOT NULL,
                     Cargo         INT          NOT NULL,
                     Disponibilidad BIT         NOT NULL DEFAULT 1,
+                    Activo        BIT          NOT NULL DEFAULT 1,
                     UrlFoto       VARCHAR(MAX) NOT NULL DEFAULT '')");
 
             if (!ExisteTabla("Barcos"))
@@ -72,6 +73,7 @@ namespace DataAccess
                     Cuota         DECIMAL(10,2)  NOT NULL,
                     IdOwner       INT            NOT NULL,
                     Disponibilidad BIT           NOT NULL DEFAULT 1,
+                    Activo        BIT            NOT NULL DEFAULT 1,
                     UrlFoto       VARCHAR(MAX)   NOT NULL DEFAULT '',
                     CONSTRAINT FK_Barcos_Personas FOREIGN KEY (IdOwner)
                         REFERENCES Personas(IdPersona))");
@@ -117,14 +119,14 @@ namespace DataAccess
             if (!ExisteSP("SP_EliminarPersona"))
                 Ejecutar(@"CREATE PROCEDURE SP_EliminarPersona @IdPersona INT
                 AS BEGIN
-                    UPDATE Personas SET Disponibilidad=0 WHERE IdPersona=@IdPersona
+                    UPDATE Personas SET Activo=0 WHERE IdPersona=@IdPersona
                 END");
 
             if (!ExisteSP("SP_ConsultarPersonaPorId"))
                 Ejecutar(@"CREATE PROCEDURE SP_ConsultarPersonaPorId @IdPersona INT
                 AS BEGIN
                     SELECT IdPersona,Nombre,Direccion,Telefono,Correo,Cargo,Disponibilidad,UrlFoto
-                    FROM Personas WHERE IdPersona=@IdPersona
+                    FROM Personas WHERE IdPersona=@IdPersona AND Activo=1
                 END");
 
             if (!ExisteSP("SP_ConsultarPersonas"))
@@ -132,7 +134,7 @@ namespace DataAccess
                 AS BEGIN
                     SELECT IdPersona,Nombre,Direccion,Telefono,Correo,Cargo,Disponibilidad,UrlFoto
                     FROM Personas
-                    WHERE (@Disponibilidad IS NULL OR Disponibilidad=@Disponibilidad)
+                    WHERE Activo=1 AND (@Disponibilidad IS NULL OR Disponibilidad=@Disponibilidad)
                 END");
 
             if (!ExisteSP("SP_ConsultarPersonasPorCargo"))
@@ -141,7 +143,7 @@ namespace DataAccess
                 AS BEGIN
                     SELECT IdPersona,Nombre,Direccion,Telefono,Correo,Cargo,Disponibilidad,UrlFoto
                     FROM Personas
-                    WHERE Cargo=@Cargo
+                    WHERE Cargo=@Cargo AND Activo=1
                     AND (@Disponibilidad IS NULL OR Disponibilidad=@Disponibilidad)
                 END");
 
@@ -170,7 +172,7 @@ namespace DataAccess
             if (!ExisteSP("SP_EliminarBarco"))
                 Ejecutar(@"CREATE PROCEDURE SP_EliminarBarco @IdBarco INT
                 AS BEGIN
-                    UPDATE Barcos SET Disponibilidad=0 WHERE IdBarco=@IdBarco
+                    UPDATE Barcos SET Activo=0 WHERE IdBarco=@IdBarco
                 END");
 
             if (!ExisteSP("SP_ConsultarBarcos"))
@@ -179,7 +181,7 @@ namespace DataAccess
                     SELECT IdBarco,Matricula,NoAmarre,Nombre,Cuota,
                            IdOwner AS IdPersona,Disponibilidad,UrlFoto
                     FROM Barcos
-                    WHERE (@Disponibilidad IS NULL OR Disponibilidad=@Disponibilidad)
+                    WHERE Activo=1 AND (@Disponibilidad IS NULL OR Disponibilidad=@Disponibilidad)
                 END");
 
             if (!ExisteSP("SP_ConsultarBarcoPorId"))
@@ -187,7 +189,7 @@ namespace DataAccess
                 AS BEGIN
                     SELECT IdBarco,Matricula,NoAmarre,Nombre,Cuota,
                            IdOwner AS IdPersona,Disponibilidad,UrlFoto
-                    FROM Barcos WHERE IdBarco=@IdBarco
+                    FROM Barcos WHERE IdBarco=@IdBarco AND Activo=1
                 END");
 
             if (!ExisteSP("SP_InsertarSalida"))

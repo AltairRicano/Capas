@@ -1,5 +1,5 @@
-﻿using System;
-using System.Data;
+using System;
+
 
 namespace Entities
 {
@@ -24,14 +24,6 @@ namespace Entities
             IdCapitan = idCapitan;
         }
 
-        public VOSalida(DataRow dr)
-        {
-            IdSalida = int.Parse(dr["IdSalida"].ToString());
-            FechaHoraSalida = DateTime.Parse(dr["FechaHoraSalida"].ToString());
-            Destino = dr["Destino"].ToString();
-            Estado = dr["Estado"].ToString();
-            IdBarco = int.Parse(dr["IdBarco"].ToString());
-            IdCapitan = int.Parse(dr["IdPersona"].ToString());
-        }
+
     }
 }
